@@ -1,10 +1,10 @@
 <?php
 
-namespace VsolutionDev\LaravelPromptGenerator\Console\Commands;
+namespace Junholee14\LaravelPromptGenerator\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use VsolutionDev\LaravelPromptGenerator\Parser;
+use Junholee14\LaravelPromptGenerator\Parser;
 
 class GeneratePrompt extends Command
 {

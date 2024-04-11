@@ -1,9 +1,9 @@
 <?php
 
-namespace VsolutionDev\LaravelPromptGenerator\Tests;
+namespace Junholee14\LaravelPromptGenerator\Tests;
 
 use Orchestra\Testbench\TestCase;
-use VsolutionDev\LaravelPromptGenerator\PromptGeneratorServiceProvider;
+use Junholee14\LaravelPromptGenerator\PromptGeneratorServiceProvider;
 
 class PackageTestCase extends TestCase
 {

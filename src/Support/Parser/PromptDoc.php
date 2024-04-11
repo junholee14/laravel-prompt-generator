@@ -1,6 +1,6 @@
 <?php
 
-namespace VsolutionDev\LaravelPromptGenerator\Support\Parser;
+namespace Junholee14\LaravelPromptGenerator\Support\Parser;
 
 use Illuminate\Routing\Route;
 

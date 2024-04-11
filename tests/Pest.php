@@ -11,7 +11,7 @@
 |
 */
 
-use VsolutionDev\LaravelPromptGenerator\Tests\PackageTestCase;
+use Junholee14\LaravelPromptGenerator\Tests\PackageTestCase;
 
 uses(PackageTestCase::class)->in(__DIR__);
 

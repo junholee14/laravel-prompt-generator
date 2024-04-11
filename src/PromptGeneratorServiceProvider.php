@@ -1,9 +1,9 @@
 <?php
 
-namespace VsolutionDev\LaravelPromptGenerator;
+namespace Junholee14\LaravelPromptGenerator;
 
 use Illuminate\Support\ServiceProvider;
-use VsolutionDev\LaravelPromptGenerator\Console\Commands\GeneratePrompt;
+use Junholee14\LaravelPromptGenerator\Console\Commands\GeneratePrompt;
 
 class PromptGeneratorServiceProvider extends ServiceProvider
 {

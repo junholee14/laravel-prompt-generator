@@ -1,6 +1,6 @@
 <?php
 
-namespace VsolutionDev\LaravelPromptGenerator\Tests\Dummy;
+namespace Junholee14\LaravelPromptGenerator\Tests\Dummy;
 
 class DummyClass1
 {

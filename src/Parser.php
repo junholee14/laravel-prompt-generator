@@ -1,9 +1,9 @@
 <?php
 
-namespace VsolutionDev\LaravelPromptGenerator;
+namespace Junholee14\LaravelPromptGenerator;
 
-use VsolutionDev\LaravelPromptGenerator\Support\Parser\PromptDoc;
-use VsolutionDev\LaravelPromptGenerator\Support\Parser\RouteInfo;
+use Junholee14\LaravelPromptGenerator\Support\Parser\PromptDoc;
+use Junholee14\LaravelPromptGenerator\Support\Parser\RouteInfo;
 
 class Parser
 {
