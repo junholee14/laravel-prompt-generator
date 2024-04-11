@@ -5,12 +5,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "vsolution-dev\\LaravelPromptGenerator\\": "src/"
+            "VsolutionDev\\LaravelPromptGenerator\\": "src/"
         }
     },
   "autoload-dev": {
         "psr-4": {
-            "vsolution-dev\\LaravelPromptGenerator\\Tests\\": "tests/"
+            "VsolutionDev\\LaravelPromptGenerator\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -46,7 +46,7 @@
     "extra": {
       "laravel": {
         "providers": [
-          "vsolution-dev\\LaravelPromptGenerator\\PromptGeneratorServiceProvider"
+          "VsolutionDev\\LaravelPromptGenerator\\PromptGeneratorServiceProvider"
         ]
       }
     }
