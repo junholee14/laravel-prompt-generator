@@ -19,9 +19,4 @@ class PromptDoc
 
         return $docComment;
     }
-
-    private function makeReflectionMethod(string $uses): \ReflectionMethod
-    {
-        return new \ReflectionMethod(...explode('::', $uses));
-    }
 }
