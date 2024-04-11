@@ -18,9 +18,10 @@ class GeneratePrompt extends Command
 
     public function handle(Parser $parser): void
     {
-        $method = $this->argument('method');
+        $method = strtoupper($this->argument('method'));
         $uri = $this->argument('uri');
-        $filePath = $this->option('filePath') ?? "prompt_{$method}_{$uri}.json";
+        $uriForFileName = str_replace('/', '_', $uri);
+        $filePath = $this->option('filePath') ?? "prompt_{$method}_{$uriForFileName}.json";
 
         if (!str_ends_with($filePath, '.json')) {
             $this->error('The file path must be a json file.');

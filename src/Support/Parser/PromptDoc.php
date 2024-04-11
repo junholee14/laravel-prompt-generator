@@ -13,9 +13,12 @@ class PromptDoc
         $docComment = $method->getDocComment();
         $docComment = str_replace(['/**', '*/', '*'], '', $docComment);
         $docComment = trim($docComment);
-        $docComment = explode('@prompt-parse', $docComment);
-        $docComment = array_map(fn($item) => trim($item), $docComment);
-        array_shift($docComment);
+        $docComment = explode(PHP_EOL, $docComment);
+        $docComment = array_filter($docComment, fn($item) => strpos($item, '@prompt-parse') !== false);
+        $docComment = array_map(function($item) {
+                $item = str_replace('@prompt-parse', '', $item);
+                return trim($item);
+        }, $docComment);
 
         return $docComment;
     }
