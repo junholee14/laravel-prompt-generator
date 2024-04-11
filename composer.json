@@ -1,16 +1,16 @@
 {
-    "name": "vsolution-dev/laravel-prompt-generator",
+    "name": "junholee14/laravel-prompt-generator",
     "description": "Laravel Prompt Generator",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "VsolutionDev\\LaravelPromptGenerator\\": "src/"
+            "Junholee14\\LaravelPromptGenerator\\": "src/"
         }
     },
   "autoload-dev": {
         "psr-4": {
-            "VsolutionDev\\LaravelPromptGenerator\\Tests\\": "tests/"
+            "Junholee14\\LaravelPromptGenerator\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -46,7 +46,7 @@
     "extra": {
       "laravel": {
         "providers": [
-          "VsolutionDev\\LaravelPromptGenerator\\PromptGeneratorServiceProvider"
+          "Junholee14\\LaravelPromptGenerator\\PromptGeneratorServiceProvider"
         ]
       }
     }
