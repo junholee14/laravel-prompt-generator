@@ -13,9 +13,6 @@ class PromptGeneratorServiceProvider extends ServiceProvider
             $this->commands([
                 GeneratePrompt::class,
             ]);
-
-            // for test use
-            $this->loadRoutesFrom(__DIR__ . '/routes/test.php');
         }
     }
 

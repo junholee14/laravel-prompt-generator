@@ -15,6 +15,7 @@ use Junholee14\LaravelPromptGenerator\Tests\PackageTestCase;
 
 uses(PackageTestCase::class)->in(__DIR__);
 
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
