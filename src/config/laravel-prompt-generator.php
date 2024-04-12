@@ -2,6 +2,6 @@
 
 return [
     'prompt' => [
-        'language' => env("LARAVEL_PROMPT_GENERATOR_LANGUAGE", "en"),
+        'language' => env("LARAVEL_PROMPT_GENERATOR_LANGUAGE", "English"),
     ],
 ];

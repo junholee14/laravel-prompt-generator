@@ -3,7 +3,7 @@
 use function Pest\Laravel\{artisan};
 
 it('generate prompt with only @prompt-parse comments', function () {
-    $filePath = 'prompt_test.json';
+    $filePath = 'prompt_test.md';
     $method = 'GET';
     $uri = 'test/only-prompt-parse';
 
@@ -15,7 +15,7 @@ it('generate prompt with only @prompt-parse comments', function () {
 });
 
 it('generate prompt with other comments', function () {
-    $filePath = 'prompt_test.json';
+    $filePath = 'prompt_test.md';
     $method = 'GET';
     $uri = 'test/prompt-parse-with-other-comments';
 
@@ -27,7 +27,7 @@ it('generate prompt with other comments', function () {
 });
 
 it('does not print error without phpdoc comments', function () {
-    $filePath = 'prompt_test.json';
+    $filePath = 'prompt_test.md';
     $method = 'GET';
     $uri = 'test/empty';
 
@@ -47,7 +47,7 @@ it('can use lowercase method', function () {
         ->expectsOutput('Prompt generated successfully.');
 
     $uriForFileName = str_replace('/', '_', $uri);
-    expect(file_exists("prompt_{$method}_{$uriForFileName}.json"))->toBeTrue();
+    expect(file_exists("prompt_{$method}_{$uriForFileName}.md"))->toBeTrue();
 });
 
 it('generate prompt without file path', function () {
@@ -59,14 +59,14 @@ it('generate prompt without file path', function () {
         ->expectsOutput('Prompt generated successfully.');
 
     $uriForFileName = str_replace('/', '_', $uri);
-    expect(file_exists("prompt_{$method}_{$uriForFileName}.json"))->toBeTrue();
+    expect(file_exists("prompt_{$method}_{$uriForFileName}.md"))->toBeTrue();
 });
 
-it('prints error message when the file path is not a json file', function () {
+it('prints error message when the file path is not a md file', function () {
     $filePath = 'prompt_test.txt';
     $method = 'GET';
     $uri = 'test/only-prompt-parse';
     artisan("laravel-prompt-generator:gen $method $uri --filePath=$filePath")
         ->assertExitCode(0)
-        ->expectsOutput('The file path must be a json file.');
+        ->expectsOutput('The file path must be a md file.');
 });

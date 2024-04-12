@@ -19,7 +19,9 @@ class Parser
         $route = $this->routeParser->parse($method, $uri);
         $promptDoc = $this->promptDoc->parse($route);
 
-        $sourceCodes = [];
+        $sourceCodes = [
+            'route' => $route->getAction('controller')
+        ];
         foreach ($promptDoc as $docComment) {
             $reflectionMethod = new \ReflectionMethod(...explode('::', $docComment));
             $filename = $reflectionMethod->getFileName();
