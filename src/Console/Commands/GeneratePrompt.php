@@ -11,7 +11,8 @@ class GeneratePrompt extends Command
     protected $signature = 'laravel-prompt-generator:gen
         {method : The http method of the route}
         {uri : The uri of the route}
-        {--filePath= : The file path to save the prompt (json format)}
+        {--audience= : The target audience of the prompt (default: developers)}
+        {--filePath= : The file path to save the prompt (md format)}
     ';
 
     protected $description = 'Generate prompt from route';
@@ -22,6 +23,7 @@ class GeneratePrompt extends Command
         $uri = $this->argument('uri');
         $uriForFileName = str_replace('/', '_', $uri);
         $filePath = $this->option('filePath') ?? "prompt_{$method}_{$uriForFileName}.json";
+        $targetAudience = $this->option('audience') ?? 'developers';
 
         if (!str_ends_with($filePath, '.json')) {
             $this->error('The file path must be a json file.');
