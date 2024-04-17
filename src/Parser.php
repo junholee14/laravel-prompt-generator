@@ -24,6 +24,7 @@ class Parser
         ];
         foreach ($promptDoc as $docComment) {
             $reflectionMethod = new \ReflectionMethod(...explode('::', $docComment));
+            $reflectionClass = new \ReflectionClass($reflectionMethod->class);
             $filename = $reflectionMethod->getFileName();
             $startLine = $reflectionMethod->getStartLine() - 1;
             $endLine = $reflectionMethod->getEndLine();
@@ -32,11 +33,13 @@ class Parser
             $source = file($filename);
             $methodSourceCode = implode("", array_slice($source, $startLine, $length));
             $docComment = $reflectionMethod->getDocComment();
+            $fileComment = $reflectionClass->getDocComment();
 
             $sourceCodes[] = [
                 'filename' => $filename,
                 'sourceCode' => $methodSourceCode,
-                'comment' => $docComment ?: ''
+                'fileComment' => $fileComment ?: '',
+                'methodComment' => $docComment ?: '',
             ];
         }
 
