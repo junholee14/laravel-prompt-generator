@@ -31,10 +31,12 @@ class Parser
 
             $source = file($filename);
             $methodSourceCode = implode("", array_slice($source, $startLine, $length));
+            $docComment = $reflectionMethod->getDocComment();
 
             $sourceCodes[] = [
                 'filename' => $filename,
-                'sourceCode' => $methodSourceCode
+                'sourceCode' => $methodSourceCode,
+                'comment' => $docComment ?: ''
             ];
         }
 
