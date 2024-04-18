@@ -3,27 +3,49 @@
 namespace Junholee14\LaravelPromptGenerator\Tests\Dummy;
 
 use Illuminate\Http\JsonResponse;
+use Junholee14\LaravelPromptGenerator\Tests\Dummy\NestedDummy\DummyClass3;
 
 class DummyEntry
 {
     /**
-     * @prompt-parse Junholee14\LaravelPromptGenerator\Tests\Dummy\DummyClass1::plus
-     * @prompt-parse Junholee14\LaravelPromptGenerator\Tests\Dummy\DummyClass2::minus
+     * @see DummyClass1::plus
+     * @see DummyClass2::minus
      */
-    public function onlyPromptParse(): JsonResponse
+    public function parsePrompt(): JsonResponse
     {
         return response()->json();
     }
 
     /**
-     * @prompt-parse Junholee14\LaravelPromptGenerator\Tests\Dummy\DummyClass1::plus
-     * @prompt-parse Junholee14\LaravelPromptGenerator\Tests\Dummy\DummyClass2::minus
+     * @see DummyClass1::plus
+     * @see DummyClass2::minus
      *
      * @param int $a
      * @param string $b
      * @return JsonResponse
      */
-    public function promptParseWithOtherComments(int $a, string $b): JsonResponse
+    public function parsePromptWithOtherComments(int $a, string $b): JsonResponse
+    {
+        return response()->json();
+    }
+
+    /**
+     * @see DummyClass1::plus
+     * @see DummyClass2::minus
+     * @see DummyClass3::plus
+     */
+    public function parsePromptWithClassInOtherDir(): JsonResponse
+    {
+        return response()->json();
+    }
+
+    /**
+     * @see DummyClass1::plus
+     * @see DummyClass2::minus
+     * @see DummyClass3::plus
+     * @see NotFoundClass::minus
+     */
+    public function parsePromptWithNotFoundClass(): JsonResponse
     {
         return response()->json();
     }

@@ -2,36 +2,46 @@
 
 namespace Junholee14\LaravelPromptGenerator;
 
-use Junholee14\LaravelPromptGenerator\Support\Parser\PromptDoc;
+use Junholee14\LaravelPromptGenerator\Support\Parser\Ast;
+use Junholee14\LaravelPromptGenerator\Support\Parser\PhpDoc;
 use Junholee14\LaravelPromptGenerator\Support\Parser\RouteInfo;
 
 class Parser
 {
     public function __construct(
-        private RouteInfo $routeParser,
-        private PromptDoc $promptDoc
+        private PhpDoc $promptDoc,
+        private Ast $ast
     ) {
 
     }
 
-    public function parseSourceCodes(string $method, string $uri)
+    public function parseSourceCodes(string $class, string $method)
     {
-        $route = $this->routeParser->parse($method, $uri);
-        $promptDoc = $this->promptDoc->parse($route);
+        $logs = [];
+        $result = [];
 
-        $sourceCodes = [
-            'route' => $route->getAction('controller')
-        ];
-        $reflectionMethod = new \ReflectionMethod(...explode('@', $route->getAction('controller')));
-        $reflectionClass = new \ReflectionClass($reflectionMethod->class);
-        $sourceCodes[] = $this->extract($reflectionMethod, $reflectionClass);
+        $promptDoc = $this->promptDoc->parse($class, $method);
+        $reflectionOfCallerMethod = new \ReflectionMethod($class, $method);
+        $reflectionOfCallerClass = new \ReflectionClass($reflectionOfCallerMethod->class);
+        $result[] = $this->extract($reflectionOfCallerMethod, $reflectionOfCallerClass);
+
         foreach ($promptDoc as $docComment) {
-            $reflectionMethod = new \ReflectionMethod(...explode('::', $docComment));
-            $reflectionClass = new \ReflectionClass($reflectionMethod->class);
-            $sourceCodes[] = $this->extract($reflectionMethod, $reflectionClass);
+            // match class from doc comment
+            [$class, $method] = explode('::', $docComment);
+            $reflectionClass = $this->ast->matchClassOfPhpdocInAst($class, $reflectionOfCallerClass);
+            if (
+                empty($method)
+                || empty($reflectionClass)
+            ) {
+                $logs[] = "Method not found in doc comment: {$docComment} in {$reflectionOfCallerMethod->class}";
+                continue;
+            }
+            $reflectionMethod = $reflectionClass->getMethod($method);
+            $result[] = $this->extract($reflectionMethod, $reflectionClass);
         }
+        $result['logs'] = $logs;
 
-        return $sourceCodes;
+        return $result;
     }
 
     private function extract(\ReflectionMethod $reflectionMethod, \ReflectionClass $reflectionClass)

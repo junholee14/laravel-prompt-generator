@@ -2,12 +2,12 @@
 
 use function Pest\Laravel\{artisan};
 
-it('generate prompt with only @prompt-parse comments', function () {
+it('generate prompt', function () {
     $filePath = 'prompt_test.md';
-    $method = 'GET';
-    $uri = 'test/only-prompt-parse';
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'parsePrompt';
 
-    artisan("laravel-prompt-generator:gen $method $uri --filePath=$filePath")
+    artisan("laravel-prompt-generator:gen $class $method --filePath=$filePath")
         ->assertExitCode(0)
         ->expectsOutput('Prompt generated successfully.');
 
@@ -16,10 +16,10 @@ it('generate prompt with only @prompt-parse comments', function () {
 
 it('generate prompt with other comments', function () {
     $filePath = 'prompt_test.md';
-    $method = 'GET';
-    $uri = 'test/prompt-parse-with-other-comments';
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'parsePromptWithOtherComments';
 
-    artisan("laravel-prompt-generator:gen $method $uri --filePath=$filePath")
+    artisan("laravel-prompt-generator:gen $class $method --filePath=$filePath")
         ->assertExitCode(0)
         ->expectsOutput('Prompt generated successfully.');
 
@@ -28,45 +28,62 @@ it('generate prompt with other comments', function () {
 
 it('does not print error without phpdoc comments', function () {
     $filePath = 'prompt_test.md';
-    $method = 'GET';
-    $uri = 'test/empty';
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'empty';
 
-    artisan("laravel-prompt-generator:gen $method $uri --filePath=$filePath")
+    artisan("laravel-prompt-generator:gen $class $method --filePath=$filePath")
         ->assertExitCode(0)
         ->expectsOutput('Prompt generated successfully.');
 
     expect(file_exists($filePath))->toBeTrue();
 });
 
-it('can use lowercase method', function () {
-    $method = 'get';
-    $uri = 'test/only-prompt-parse';
-
-    artisan("laravel-prompt-generator:gen $method $uri")
-        ->assertExitCode(0)
-        ->expectsOutput('Prompt generated successfully.');
-
-    $uriForFileName = str_replace('/', '_', $uri);
-    expect(file_exists("prompt_{$method}_{$uriForFileName}.md"))->toBeTrue();
-});
-
 it('generate prompt without file path', function () {
-    $method = 'GET';
-    $uri = 'test/only-prompt-parse';
+    \Carbon\Carbon::setTestNow('2021-01-01 00:00:00');
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'parsePrompt';
 
-    artisan("laravel-prompt-generator:gen $method $uri")
+    artisan("laravel-prompt-generator:gen $class $method")
         ->assertExitCode(0)
         ->expectsOutput('Prompt generated successfully.');
 
-    $uriForFileName = str_replace('/', '_', $uri);
-    expect(file_exists("prompt_{$method}_{$uriForFileName}.md"))->toBeTrue();
+    $now = now()->format('Y-m-d_H:i:s');
+    $filaName = "prompt_{$now}.md";
+    expect(file_exists($filaName))->toBeTrue();
 });
 
 it('prints error message when the file path is not a md file', function () {
     $filePath = 'prompt_test.txt';
-    $method = 'GET';
-    $uri = 'test/only-prompt-parse';
-    artisan("laravel-prompt-generator:gen $method $uri --filePath=$filePath")
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'parsePrompt';
+
+    artisan("laravel-prompt-generator:gen $class $method --filePath=$filePath")
         ->assertExitCode(0)
         ->expectsOutput('The file path must be a md file.');
+});
+
+it('generate prompt with class in other dir', function () {
+    $filePath = 'prompt_test.md';
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'parsePromptWithClassInOtherDir';
+
+    artisan("laravel-prompt-generator:gen $class $method --filePath=$filePath")
+        ->assertExitCode(0)
+        ->expectsOutput('Prompt generated successfully.');
+
+    expect(file_exists($filePath))->toBeTrue();
+});
+
+it('generate prompt with not found class', function () {
+    $filePath = 'prompt_test.md';
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'parsePromptWithNotFoundClass';
+
+    artisan("laravel-prompt-generator:gen $class $method --filePath=$filePath")
+        ->assertExitCode(0)
+        ->expectsOutput('Method not found in doc comment: NotFoundClass::minus in Junholee14\LaravelPromptGenerator\Tests\Dummy\DummyEntry')
+        ->expectsOutput('Check out the rest of the logs in the log file.')
+        ->expectsOutput('Prompt generated successfully.');
+
+    expect(file_exists($filePath))->toBeTrue();
 });

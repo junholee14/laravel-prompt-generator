@@ -4,13 +4,14 @@ namespace Junholee14\LaravelPromptGenerator\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Junholee14\LaravelPromptGenerator\Parser;
 
 class GeneratePrompt extends Command
 {
     protected $signature = 'laravel-prompt-generator:gen
-        {method : The http method of the route}
-        {uri : The uri of the route}
+        {class : The class name to parse}
+        {method : The method to parse}
         {--audience= : The target audience of the prompt (default: developers)}
         {--filePath= : The file path to save the prompt (md format)}
     ';
@@ -27,22 +28,32 @@ class GeneratePrompt extends Command
 
     public function handle(Parser $parser): void
     {
-        $language = config('laravel-prompt-generator.prompt.language');
-        $method = strtoupper($this->argument('method'));
-        $uri = $this->argument('uri');
-        $uriForFileName = str_replace('/', '_', $uri);
-        $targetAudience = $this->option('audience') ?? 'developers';
-        $filePath = $this->option('filePath') ?? "prompt_{$method}_{$uriForFileName}.md";
-
-        if (!str_ends_with($filePath, '.md')) {
-            $this->error('The file path must be a md file.');
+        if (! $this->validateInputParams()) {
             return;
         }
+        $language = config('laravel-prompt-generator.prompt.language');
+        $class = $this->argument('class');
 
-        $sourceCodes = $parser->parseSourceCodes($method, $uri);
+        $method = strtoupper($this->argument('method'));
+        $targetAudience = $this->option('audience') ?? 'developers';
+        $now = now()->format('Y-m-d_H:i:s');
+        $filePath = $this->option('filePath') ?? "prompt_{$now}.md";
+
+        $sourceCodes = $parser->parseSourceCodes($class, $method);
+        Log::info($sourceCodes['logs']);
+        // print logs
+        foreach (array_slice($sourceCodes['logs'], 0, 5) as $log) {
+            $this->info($log);
+            $this->info("...");
+        }
+        if (! empty($sourceCodes['logs'])) {
+            $this->info("Check out the rest of the logs in the log file.");
+        }
+
+        unset($sourceCodes['logs']);
+
         $apiInfo = json_encode(
             [
-                'api_uri' => $uri,
                 'source_codes' => $sourceCodes
             ],
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
@@ -53,6 +64,20 @@ class GeneratePrompt extends Command
         );
 
         $this->info("Prompt generated successfully.");
+    }
+
+    private function validateInputParams()
+    {
+        $filePath = $this->option('filePath');
+
+        if (empty($filePath)) {
+            return true;
+        } elseif (!str_ends_with($filePath, '.md')) {
+            $this->error('The file path must be a md file.');
+            return false;
+        }
+
+        return true;
     }
 
     private function makePrompt(
