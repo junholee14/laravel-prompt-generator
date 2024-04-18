@@ -44,10 +44,12 @@ class GeneratePrompt extends Command
         // print logs
         foreach (array_slice($sourceCodes['logs'], 0, 5) as $log) {
             $this->info($log);
-            $this->info("...");
         }
-        if (! empty($sourceCodes['logs'])) {
-            $this->info("Check out the rest of the logs in the log file.");
+        if (
+            ! empty($sourceCodes['logs'])
+            && count($sourceCodes['logs']) > 5
+        ) {
+            $this->info("... Check out the rest of the logs in the log file.");
         }
 
         unset($sourceCodes['logs']);
