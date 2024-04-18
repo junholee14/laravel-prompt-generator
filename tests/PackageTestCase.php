@@ -11,7 +11,6 @@ class PackageTestCase extends TestCase
     {
         return [
             PromptGeneratorServiceProvider::class,
-            TestServiceProvider::class
         ];
     }
 }
