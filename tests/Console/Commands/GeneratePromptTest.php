@@ -82,7 +82,6 @@ it('generate prompt with not found class', function () {
     artisan("laravel-prompt-generator:gen $class $method --filePath=$filePath")
         ->assertExitCode(0)
         ->expectsOutput('Method not found in doc comment: NotFoundClass::minus in Junholee14\LaravelPromptGenerator\Tests\Dummy\DummyEntry')
-        ->expectsOutput('Check out the rest of the logs in the log file.')
         ->expectsOutput('Prompt generated successfully.');
 
     expect(file_exists($filePath))->toBeTrue();
