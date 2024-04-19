@@ -18,14 +18,6 @@ class GeneratePrompt extends Command
 
     protected $description = 'Generate prompt from route';
 
-    private const PROMPT = "
-    Examine the API source codes and elucidate the functionality within the designated language.
-    The target audience is {target}, and customize the explanation to suit their level of technical expertise.
-    language: {language}
-    
-    {api_info}
-    ";
-
     public function handle(Parser $parser): void
     {
         if (! $this->validateInputParams()) {
@@ -54,7 +46,7 @@ class GeneratePrompt extends Command
 
         unset($sourceCodes['logs']);
 
-        $apiInfo = json_encode(
+        $sourceCodes = json_encode(
             [
                 'source_codes' => $sourceCodes
             ],
@@ -62,7 +54,7 @@ class GeneratePrompt extends Command
         );
         File::put(
             $filePath,
-            $this->makePrompt($language, $targetAudience, $apiInfo)
+            $this->makePrompt($language, $targetAudience, $sourceCodes)
         );
 
         $this->info("Prompt generated successfully.");
@@ -85,12 +77,13 @@ class GeneratePrompt extends Command
     private function makePrompt(
         string $language,
         string $targetAudience,
-        string $apiInfo
+        string $sourceCodes
     ) {
+        $prompt = config('laravel-prompt-generator.prompt.content');
         return str_replace(
-            ['{target}', '{language}', '{api_info}'],
-            [$targetAudience, $language, $apiInfo],
-            self::PROMPT
+            ['{target}', '{language}', '{source_codes}'],
+            [$targetAudience, $language, $sourceCodes],
+            $prompt
         );
     }
 }
