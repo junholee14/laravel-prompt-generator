@@ -34,7 +34,7 @@ class GeneratePrompt extends Command
         $language = config('laravel-prompt-generator.prompt.language');
         $class = $this->argument('class');
 
-        $method = strtoupper($this->argument('method'));
+        $method = $this->argument('method');
         $targetAudience = $this->option('audience') ?? 'developers';
         $now = now()->format('Y-m-d_H:i:s');
         $filePath = $this->option('filePath') ?? "prompt_{$now}.md";
