@@ -6,30 +6,28 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Junholee14\LaravelPromptGenerator\Parser;
+use Junholee14\LaravelPromptGenerator\Support\Prompt\BasePromptMaker;
 
 class GeneratePrompt extends Command
 {
     protected $signature = 'laravel-prompt-generator:gen
         {class : The class name to parse}
         {method : The method to parse}
-        {--audience= : The target audience of the prompt (default: developers)}
+        {--template= : The prompt template to use}
         {--filePath= : The file path to save the prompt (md format)}
     ';
 
-    protected $description = 'Generate prompt from route';
+    protected $description = 'Generate prompt from method';
 
     public function handle(Parser $parser): void
     {
-        if (! $this->validateInputParams()) {
-            return;
-        }
-        $language = config('laravel-prompt-generator.prompt.language');
-        $class = $this->argument('class');
-
-        $method = $this->argument('method');
-        $targetAudience = $this->option('audience') ?? 'developers';
         $now = now()->format('Y-m-d_H:i:s');
+        $class = $this->argument('class');
+        $method = $this->argument('method');
+        $template = $this->option('template') ?? 'default';
         $filePath = $this->option('filePath') ?? "prompt_{$now}.md";
+
+        if (! $this->validateFilePath($filePath) && ! $this->validateTemplate($template)) return;
 
         $sourceCodes = $parser->parseSourceCodes($class, $method);
         Log::info($sourceCodes['logs']);
@@ -52,38 +50,50 @@ class GeneratePrompt extends Command
             ],
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
+
+        if ($template === 'default') {
+            $promptMaker = app(config('laravel-prompt-generator.prompt.default'));
+        } else {
+            $promptMaker = app(config('laravel-prompt-generator.prompt.templates')[$template]);
+        }
+
         File::put(
             $filePath,
-            $this->makePrompt($language, $targetAudience, $sourceCodes)
+            $promptMaker->makePrompt($sourceCodes)
         );
 
         $this->info("Prompt generated successfully.");
     }
 
-    private function validateInputParams()
+    private function validateFilePath($filePath)
     {
-        $filePath = $this->option('filePath');
-
-        if (empty($filePath)) {
-            return true;
-        } elseif (!str_ends_with($filePath, '.md')) {
-            $this->error('The file path must be a md file.');
+        if (! preg_match('/\.md$/', $filePath)) {
+            $this->error("The file path must be a md file.");
             return false;
         }
 
         return true;
     }
 
-    private function makePrompt(
-        string $language,
-        string $targetAudience,
-        string $sourceCodes
-    ) {
-        $prompt = config('laravel-prompt-generator.prompt.content');
-        return str_replace(
-            ['{target}', '{language}', '{source_codes}'],
-            [$targetAudience, $language, $sourceCodes],
-            $prompt
-        );
+    private function validateTemplate(string $template)
+    {
+        $promptMaker = null;
+        if ($template === 'default') {
+            $promptMaker = app(config('laravel-prompt-generator.prompt.default'));
+        } else {
+            $promptMaker = app(config('laravel-prompt-generator.prompt.templates')[$template]);
+        }
+
+        if (empty($promptMaker)) {
+            $this->error("The template {$template} is not found.");
+            return false;
+        }
+
+        if (! $promptMaker instanceof BasePromptMaker) {
+            $this->error("The template {$template} is not a valid prompt maker.");
+            return false;
+        }
+
+        return true;
     }
 }

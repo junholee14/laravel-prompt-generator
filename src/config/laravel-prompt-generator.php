@@ -1,12 +1,12 @@
 <?php
 
+use Junholee14\LaravelPromptGenerator\Support\Prompt\DefaultPromptMaker;
+
 return [
     'prompt' => [
-        'content' => "Examine the source codes and elucidate the functionality within the designated language.
-    The target audience is {target}, and customize the explanation to suit their level of technical expertise.
-    language: {language}
-    
-    {source_codes}",
-        'language' => env("LARAVEL_PROMPT_GENERATOR_LANGUAGE", "English"),
+        'default' => DefaultPromptMaker::class,
+        'templates' => [
+            // add your custom prompt templates here
+        ]
     ],
 ];
