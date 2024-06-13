@@ -9,12 +9,22 @@ Examine the source codes and elucidate the functionality.
 {source_codes}
 PROMPT;
 
-    public function makePrompt(string $sourceCodes)
+    public function makePrompt(string $sourceCodes, array $variables = [])
     {
-        return str_replace(
+        $prompt = str_replace(
             ['{source_codes}'],
             [$sourceCodes],
             self::prompt
         );
+
+        if (! empty($variables)) {
+            foreach ($variables as $index => $variable) {
+                $prompt = str_replace(
+                    ['{variable' . ($index + 1) . '}'],
+                    [$variable],
+                    $prompt
+                );
+            }
+        }
     }
 }

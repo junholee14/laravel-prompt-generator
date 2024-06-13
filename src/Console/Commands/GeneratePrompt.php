@@ -13,6 +13,7 @@ class GeneratePrompt extends Command
     protected $signature = 'laravel-prompt-generator:gen
         {class : The class name to parse}
         {method : The method to parse}
+        {variables?* : The prompt variable(s) to use}
         {--template= : The prompt template to use}
         {--filePath= : The file path to save the prompt (md format)}
     ';
@@ -24,6 +25,7 @@ class GeneratePrompt extends Command
         $now = now()->format('Y-m-d_H:i:s');
         $class = $this->argument('class');
         $method = $this->argument('method');
+        $variables = $this->argument('variables');
         $template = $this->option('template') ?? 'default';
         $filePath = $this->option('filePath') ?? "prompt_{$now}.md";
 
@@ -59,7 +61,7 @@ class GeneratePrompt extends Command
 
         File::put(
             $filePath,
-            $promptMaker->makePrompt($sourceCodes)
+            $promptMaker->makePrompt($sourceCodes, $variables)
         );
 
         $this->info("Prompt generated successfully.");

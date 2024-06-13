@@ -86,3 +86,16 @@ it('generate prompt with not found class', function () {
 
     expect(file_exists($filePath))->toBeTrue();
 });
+
+it('generate prompt with variables', function () {
+    $filePath = 'prompt_test.md';
+    $class = "Junholee14\\\LaravelPromptGenerator\\\Tests\\\Dummy\\\DummyEntry";
+    $method = 'parsePrompt';
+    $variables = ['variable1', 'variable2'];
+
+    artisan("laravel-prompt-generator:gen $class $method " . implode(' ', $variables) . " --filePath=$filePath")
+        ->assertExitCode(0)
+        ->expectsOutput('Prompt generated successfully.');
+
+    expect(file_exists($filePath))->toBeTrue();
+});
