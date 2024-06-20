@@ -74,6 +74,12 @@ class GeneratePrompt extends Command
             return false;
         }
 
+        $directory = dirname($filePath);
+        if (! File::exists($directory)) {
+            File::makeDirectory($directory, 0777, true, true);
+            $this->info("The directory {$directory} is created.");
+        }
+
         return true;
     }
 
