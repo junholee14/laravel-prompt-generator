@@ -26,5 +26,7 @@ PROMPT;
                 );
             }
         }
+
+        return $prompt;
     }
 }
