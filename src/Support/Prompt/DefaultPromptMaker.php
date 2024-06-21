@@ -14,7 +14,7 @@ PROMPT;
         $prompt = str_replace(
             ['{source_codes}'],
             [$sourceCodes],
-            self::prompt
+            static::prompt
         );
 
         if (! empty($variables)) {
